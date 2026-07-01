@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Beneath Broad</title>
+<title>Beneath Broad Invite</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
 /* =========================
-   ATMOSPHERE (ROOM FIRST)
+   NEW OBVIOUS BACKGROUND
+   (THIS IS THE “YOU ASKED FOR CHANGE” FIX)
 ========================= */
 
 body {
@@ -17,118 +18,118 @@ body {
   font-family: 'Playfair Display', serif;
   color: #f5f1e8;
   overflow: hidden;
-  background: #070505;
+
+  /* 🔥 CLEARLY DIFFERENT: WARM VELVET ROOM */
+  background:
+    radial-gradient(circle at 20% 30%, #3b1f1a 0%, transparent 45%),
+    radial-gradient(circle at 80% 70%, #2a1a3a 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, #0a0a10 0%, #050408 70%);
 }
 
-/* living light */
+/* MOVING LIGHT = obvious motion */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(circle at 30% 30%, rgba(255,170,90,0.18), transparent 55%),
-    radial-gradient(circle at 70% 60%, rgba(120,80,40,0.12), transparent 60%),
-    radial-gradient(circle at center, rgba(0,0,0,0.9), #000);
-  animation: breathe 14s ease-in-out infinite;
+    radial-gradient(circle at 30% 40%, rgba(255,180,90,0.25), transparent 45%),
+    radial-gradient(circle at 70% 60%, rgba(255,120,80,0.15), transparent 55%);
+  animation: glowshift 6s ease-in-out infinite alternate;
   pointer-events: none;
 }
 
-@keyframes breathe {
-  0% { transform: scale(1); filter: brightness(1); }
-  50% { transform: scale(1.03); filter: brightness(1.08); }
-  100% { transform: scale(1); filter: brightness(1); }
+@keyframes glowshift {
+  from { transform: translate(-2%, -2%); filter: brightness(1); }
+  to { transform: translate(3%, 2%); filter: brightness(1.2); }
 }
 
-/* grain */
+/* subtle smoke haze */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
   background: url("https://grainy-gradients.vercel.app/noise.svg");
-  opacity: 0.07;
+  opacity: 0.10;
   pointer-events: none;
 }
 
 /* =========================
-   STRUCTURE
+   LAYOUT
 ========================= */
 
 .container {
-  max-width: 600px;
+  max-width: 560px;
   margin: auto;
-  padding: 90px 20px;
+  padding: 80px 20px;
   text-align: center;
 }
 
-/* EVERYTHING is staged */
+/* scenes */
 .scene {
-  opacity: 0;
-  transform: translateY(18px);
-  transition: all 0.9s ease;
-  position: absolute;
-  width: 100%;
+  display: none;
 }
 
 .scene.active {
-  opacity: 1;
-  transform: translateY(0);
-  position: relative;
+  display: block;
 }
 
-/* reveal animation for options */
-.hidden {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: 0.6s ease;
-}
+/* =========================
+   TEXT
+========================= */
 
-.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* typography */
 h1 {
   font-family: 'Cinzel', serif;
   letter-spacing: 2px;
+  margin-bottom: 10px;
 }
 
 .glow {
-  text-shadow: 0 0 30px rgba(255,190,120,0.12);
+  text-shadow: 0 0 25px rgba(255, 190, 120, 0.25);
 }
 
 p {
-  opacity: 0.75;
+  opacity: 0.85;
 }
 
-/* buttons */
+/* =========================
+   BUTTONS (REDESIGNED)
+========================= */
+
+.button-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+}
+
 button {
-  background: rgba(199,164,106,0.85);
-  border: none;
-  padding: 12px 16px;
+  background: linear-gradient(135deg, #c7a46a, #8c6a3d);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 14px 16px;
   margin: 8px;
-  border-radius: 8px;
-  font-weight: 600;
+  border-radius: 12px;
+  font-weight: 700;
   cursor: pointer;
-  transition: 0.25s;
+  min-width: 140px;
+  transition: 0.2s;
+  color: #1a120b;
 }
 
 button:hover {
-  transform: scale(1.03);
-  filter: brightness(1.15);
+  transform: scale(1.05);
+  filter: brightness(1.1);
 }
 
-/* runaway */
+/* runaway buttons */
 .chaos {
   position: absolute;
 }
 
-/* reaction */
+/* reaction text */
 #reaction {
   margin-top: 18px;
   font-style: italic;
-  opacity: 0.65;
-  min-height: 20px;
+  opacity: 0.7;
 }
 </style>
 </head>
@@ -139,11 +140,11 @@ button:hover {
 
   <!-- INTRO -->
   <div id="intro" class="scene active">
-    <h1 class="glow">You’ve Been Noticed</h1>
-    <p>The room registers your arrival.</p>
+    <h1 class="glow">You've Been Noticed</h1>
+    <p>The room has acknowledged your arrival.</p>
 
-    <div id="introButtons" class="hidden">
-      <button onclick="enter()">Enter</button>
+    <div class="button-grid">
+      <button onclick="go('time')">Accept</button>
       <button id="noBtn" onmouseover="runAway(this)">No</button>
     </div>
 
@@ -153,8 +154,7 @@ button:hover {
   <!-- TIME -->
   <div id="time" class="scene">
     <h1>When are you arriving?</h1>
-
-    <div id="timeOptions" class="hidden">
+    <div class="button-grid">
       <button onclick="pickTime('6:30 PM')">6:30 PM</button>
       <button onclick="pickTime('7:00 PM')">7:00 PM</button>
     </div>
@@ -163,8 +163,7 @@ button:hover {
   <!-- OUTFIT -->
   <div id="outfit" class="scene">
     <h1>What are you wearing?</h1>
-
-    <div id="outfitOptions" class="hidden">
+    <div class="button-grid">
       <button onclick="pickOutfit('Lounge')">Lounge & Lazy</button>
       <button onclick="pickOutfit('Jeans')">Jeans Bro</button>
       <button onclick="pickOutfit('Date')">Date Night</button>
@@ -175,21 +174,20 @@ button:hover {
   <!-- DRINK -->
   <div id="drink" class="scene">
     <h1>What are you drinking?</h1>
-
-    <div id="drinkOptions" class="hidden">
+    <div class="button-grid">
       <button onclick="pickDrink('Bubbles')">Bougie Bubbles</button>
       <button onclick="pickDrink('Fruity')">Something Fruity</button>
       <button onclick="pickDrink('Old')">Old Fashioned</button>
-      <button onclick="pickDrink('Mix')">Ask the Bartender</button>
+      <button onclick="pickDrink('Mix')">Ask Bartender</button>
 
-      <button id="boringBtn" onmouseover="runAway(this)">Nothing, I'm boring</button>
+      <button id="boring" onmouseover="runAway(this)">Nothing, I'm boring</button>
     </div>
   </div>
 
   <!-- FINAL -->
   <div id="final" class="scene">
-    <h1 class="glow">You’re In.</h1>
-    <p>They were expecting you.</p>
+    <h1 class="glow">You're In.</h1>
+    <p>Saturday night. Don’t be late.</p>
     <p id="summary"></p>
   </div>
 
@@ -198,34 +196,18 @@ button:hover {
 <script>
 let data = {};
 
-/* room reaction */
+/* reaction */
 function react(msg){
-  document.getElementById("reaction").innerText = msg || "";
+  document.getElementById("reaction").innerText = msg || "Noted.";
 }
 
-/* staged reveal helper */
-function reveal(id){
-  setTimeout(() => {
-    document.getElementById(id).classList.add("show");
-  }, 900);
-}
-
-/* scene swap with delay */
+/* scene swap */
 function go(id){
-  setTimeout(() => {
-    document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-  }, 600);
+  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
-/* ENTRY */
-function enter(){
-  react("The room acknowledges you.");
-  setTimeout(()=>go('time'), 900);
-  setTimeout(()=>reveal('timeOptions'), 1500);
-}
-
-/* RUNAWAY */
+/* runaway */
 function runAway(btn){
   btn.style.position = "absolute";
   btn.style.top = Math.random() * window.innerHeight + "px";
@@ -233,40 +215,33 @@ function runAway(btn){
   react("That answer is not accepted here.");
 }
 
-/* TIME */
+/* flow */
 function pickTime(t){
   data.time = t;
-  react("Noted.");
+  react("Acknowledged.");
   go('outfit');
-  reveal('outfitOptions');
 }
 
-/* OUTFIT */
 function pickOutfit(o){
   data.outfit = o;
-  react("Observed.");
+  react("Noted.");
   go('drink');
-  reveal('drinkOptions');
 }
 
-/* DRINK */
 function pickDrink(d){
   data.drink = d;
   react("Good.");
-  setTimeout(()=>finish(), 800);
+  finish();
 }
 
-/* FINAL */
 function finish(){
   go('final');
-  setTimeout(() => {
-    document.getElementById("summary").innerText =
-      `Time: ${data.time}
+  document.getElementById("summary").innerText =
+    `Time: ${data.time}
 Outfit: ${data.outfit}
 Drink: ${data.drink}
 
-Status: Expected.`;
-  }, 900);
+Status: You're expected.`;
 }
 </script>
 
