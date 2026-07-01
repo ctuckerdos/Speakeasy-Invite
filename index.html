@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Beneath Broad</title>
+<title>Beneath Broad Invite</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 
@@ -11,47 +11,63 @@
 body {
   margin: 0;
   font-family: 'Playfair Display', serif;
-  background: radial-gradient(circle at top, #1f1a16, #0b0a09);
+  background: radial-gradient(circle at top, #1a1411, #070606);
   color: #f5f1e8;
   overflow: hidden;
 }
 
-/* soft amber haze */
+/* subtle moving atmosphere */
 body::before {
   content: "";
   position: fixed;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(255,180,90,0.06), transparent 60%);
-  animation: drift 16s linear infinite;
+  background: radial-gradient(circle, rgba(255,185,120,0.05), transparent 60%);
+  animation: drift 18s ease-in-out infinite;
   pointer-events: none;
 }
 
 @keyframes drift {
   0% { transform: translate(-8%, -8%); }
-  50% { transform: translate(-12%, -15%); }
+  50% { transform: translate(-12%, -14%); }
   100% { transform: translate(-8%, -8%); }
 }
 
 .container {
   max-width: 540px;
   margin: auto;
-  padding: 60px 20px;
+  padding: 65px 20px;
   text-align: center;
+}
+
+/* smooth scene transitions */
+.section {
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+  transition: all 0.55s ease;
+  position: absolute;
+  width: 100%;
+  left: 0;
+}
+
+.section.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  position: relative;
 }
 
 h1 {
   font-family: 'Cinzel', serif;
   letter-spacing: 2px;
-  font-weight: 600;
 }
 
 .glow {
-  text-shadow: 0 0 18px rgba(255, 200, 120, 0.2);
+  text-shadow: 0 0 18px rgba(255, 200, 120, 0.15);
 }
 
 p {
-  opacity: 0.85;
+  opacity: 0.8;
+  transition: 0.3s;
 }
 
 button {
@@ -66,15 +82,7 @@ button {
 }
 
 button:hover {
-  transform: scale(1.05);
-}
-
-.section { display: none; }
-.section.active { display: block; animation: fade 0.5s ease; }
-
-@keyframes fade {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  transform: scale(1.04);
 }
 
 /* runaway button */
@@ -82,40 +90,26 @@ button:hover {
   position: absolute;
 }
 
-/* subtle shake feedback */
-.shake {
-  animation: shake 0.25s;
-}
-
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  50% { transform: translateX(4px); }
-  75% { transform: translateX(-3px); }
-  100% { transform: translateX(0); }
-}
-
-/* sparkle micro feedback */
+/* subtle spark */
 .spark {
   position: fixed;
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
   background: gold;
   border-radius: 50%;
   pointer-events: none;
-  animation: pop 0.6s ease-out forwards;
+  animation: fade 0.6s ease-out forwards;
 }
 
-@keyframes pop {
+@keyframes fade {
   from { opacity: 1; transform: scale(1); }
   to { opacity: 0; transform: scale(3); }
 }
 
-/* bartender text */
 #voice {
-  margin-top: 10px;
+  margin-top: 12px;
   font-style: italic;
-  opacity: 0.7;
+  opacity: 0.65;
 }
 </style>
 </head>
@@ -124,95 +118,116 @@ button:hover {
 
 <div class="container">
 
-  <!-- INTRO -->
+  <!-- PAGE 1 -->
   <div id="p1" class="section active">
     <h1 class="glow">You’ve Been Noticed</h1>
-    <p>JH Beneath Broad has a reservation under your existence.</p>
+    <p>JH Beneath Broad has acknowledged your reservation.</p>
 
     <button onclick="go('p2')">Accept</button>
     <button id="noBtn" onmouseover="runAway(this)">No</button>
 
-    <div id="voice"></div>
+    <button onclick="toggleSound()" id="soundBtn">Turn on Jazz (optional)</button>
+
+    <p id="voice"></p>
   </div>
 
-  <!-- TIME -->
+  <!-- PAGE 2 -->
   <div id="p2" class="section">
-    <h1>When are you arriving?</h1>
+    <h1>Arrival</h1>
 
-    <button onclick="chooseTime('6:30 PM')">6:30 PM</button>
-    <button onclick="chooseTime('7:00 PM')">7:00 PM</button>
-
-    <p id="voice2"></p>
+    <button onclick="pickTime('6:30 PM')">6:30 PM</button>
+    <button onclick="pickTime('7:00 PM')">7:00 PM</button>
   </div>
 
-  <!-- OUTFIT -->
+  <!-- PAGE 3 -->
   <div id="p3" class="section">
-    <h1>Dress code assessment</h1>
+    <h1>Dress Code</h1>
 
-    <button onclick="chooseOutfit('Lounge & Lazy')">Lounge & Lazy</button>
-    <button onclick="chooseOutfit('Jeans Bro')">Jeans Bro</button>
-    <button onclick="chooseOutfit('Date Night')">Date Night</button>
-    <button onclick="chooseOutfit('All Out')">All Out</button>
+    <button onclick="pickOutfit('Lounge & Lazy')">Lounge & Lazy</button>
+    <button onclick="pickOutfit('Jeans Bro')">Jeans Bro</button>
+    <button onclick="pickOutfit('Date Night')">Date Night</button>
+    <button onclick="pickOutfit('All Out')">All Out</button>
   </div>
 
-  <!-- DRINK -->
+  <!-- PAGE 4 -->
   <div id="p4" class="section">
-    <h1>First drink decision</h1>
+    <h1>Drink</h1>
 
-    <button onclick="chooseDrink('Bubbles')">Bougie Bubbles</button>
-    <button onclick="chooseDrink('Fruity')">Something Fruity</button>
-    <button onclick="chooseDrink('Old Fashioned')">Old Fashioned</button>
-    <button onclick="chooseDrink('Mixologist')">Talk to the bartender</button>
+    <button onclick="pickDrink('Bubbles')">Bougie Bubbles</button>
+    <button onclick="pickDrink('Fruity')">Something Fruity</button>
+    <button onclick="pickDrink('Old Fashioned')">Old Fashioned</button>
+    <button onclick="pickDrink('Mixologist')">Ask the Bartender</button>
 
     <button id="boringBtn" onmouseover="runAway(this)">Nothing. I'm boring.</button>
   </div>
 
   <!-- FINAL -->
   <div id="p5" class="section">
-    <h1 class="glow">You're in.</h1>
-    <p>Try not to ruin the vibe.</p>
+    <h1 class="glow">You’re In.</h1>
+    <p>Saturday night. Don’t be late. They notice everything here.</p>
 
     <p id="summary"></p>
   </div>
 
 </div>
 
+<!-- SOUND -->
+<audio id="jazz" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8b3b3c5a2.mp3?filename=slow-jazz-ambient-11059.mp3">
+</audio>
+
 <script>
 let data = {};
+let soundOn = false;
 
-function go(id){
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  voice(randomVoice());
-}
+const voiceLines = [
+  "Noted.",
+  "Mm.",
+  "We’ll allow it.",
+  "Interesting.",
+  "Expected.",
+  "You’ll do."
+];
 
 function voice(text){
-  let v = document.getElementById("voice");
-  if(v) v.innerText = text;
+  document.getElementById("voice").innerText = text;
 }
 
-function randomVoice(){
-  const lines = [
-    "Noted.",
-    "Bold choice.",
-    "We’ve seen worse.",
-    "Interesting…",
-    "Try not to overthink it.",
-    "Accepted. Barely."
-  ];
-  return lines[Math.floor(Math.random()*lines.length)];
+function go(id){
+  setTimeout(() => {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    voice(voiceLines[Math.floor(Math.random()*voiceLines.length)]);
+  }, 400);
 }
 
-/* runaway button logic */
+/* SOUND */
+function toggleSound(){
+  const audio = document.getElementById("jazz");
+
+  if(!soundOn){
+    audio.volume = 0.25;
+    audio.play();
+    soundOn = true;
+    document.getElementById("soundBtn").innerText = "Jazz is on";
+  }
+}
+
+/* RUNAWAY BUTTON */
 function runAway(btn){
-  btn.classList.add("chaos");
-  btn.style.top = Math.random() * window.innerHeight + "px";
-  btn.style.left = Math.random() * window.innerWidth + "px";
-  sparkle();
+  btn.style.position = "absolute";
+
+  setTimeout(() => {
+    btn.style.top = Math.random() * (window.innerHeight - 100) + "px";
+    btn.style.left = Math.random() * (window.innerWidth - 100) + "px";
+  }, 120);
+
+  voice("That’s not how this works.");
 }
 
-function sparkle(){
-  for(let i=0;i<5;i++){
+/* SPARK */
+function spark(){
+  for(let i=0;i<4;i++){
     let s = document.createElement("div");
     s.className = "spark";
     s.style.left = Math.random()*window.innerWidth + "px";
@@ -222,28 +237,37 @@ function sparkle(){
   }
 }
 
-/* choices */
-function chooseTime(t){
+/* CHOICES */
+function pickTime(t){
   data.time = t;
-  document.getElementById("voice2").innerText = "Seat reserved. Don’t be late.";
-  setTimeout(()=>go('p3'), 700);
+  voice(t === "6:30 PM" ? "Early. Respectable." : "Late. Confident.");
+  setTimeout(()=>go('p3'), 600);
 }
 
-function chooseOutfit(o){
+function pickOutfit(o){
   data.outfit = o;
-  sparkle();
-  go('p4');
+  voice("Observed.");
+  spark();
+  setTimeout(()=>go('p4'), 650);
 }
 
-function chooseDrink(d){
+function pickDrink(d){
   data.drink = d;
-  finish();
+  voice("Good.");
+  spark();
+  setTimeout(()=>finish(), 650);
 }
 
 function finish(){
   go('p5');
-  document.getElementById("summary").innerText =
-    `Time: ${data.time}\nOutfit: ${data.outfit}\nDrink: ${data.drink}`;
+  setTimeout(() => {
+    document.getElementById("summary").innerText =
+      `Time: ${data.time}
+Outfit: ${data.outfit}
+Drink: ${data.drink}
+
+Status: Approved.`;
+  }, 600);
 }
 </script>
 
