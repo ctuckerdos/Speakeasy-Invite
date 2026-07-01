@@ -1,269 +1,828 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Speakeasy Invite</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Speakeasy Invite</title>
+    <style>
+        /* ── Reset & Base ── */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #1a1410;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
 
-<style>
-body {
-  margin: 0;
-  font-family: 'Playfair Display', serif;
-  color: #f5f1e8;
-  overflow: hidden;
-}
+        /* ── Prohibition-style background ── */
+        .container {
+            max-width: 720px;
+            width: 100%;
+            background: #2a1f18;
+            background-image:
+                radial-gradient(ellipse at 20% 50%, rgba(60, 40, 28, 0.6) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(60, 40, 28, 0.6) 0%, transparent 60%),
+                repeating-linear-gradient(45deg,
+                    rgba(40, 28, 20, 0.3) 0px,
+                    rgba(40, 28, 20, 0.3) 2px,
+                    transparent 2px,
+                    transparent 8px);
+            border: 6px solid #b8944c;
+            border-image: linear-gradient(180deg, #d4a84a, #8a6a2f) 1;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow:
+                0 0 40px rgba(0, 0, 0, 0.9),
+                inset 0 0 60px rgba(0, 0, 0, 0.7),
+                0 0 120px rgba(184, 148, 76, 0.15);
+            position: relative;
+            min-height: 600px;
+            transition: min-height 0.3s;
+        }
 
-/* =======================
-   BACKGROUND (SPEAKEASY)
-======================= */
-.bg {
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(circle at 20% 30%, rgba(90,40,30,0.7), transparent 50%),
-    radial-gradient(circle at 80% 60%, rgba(40,20,60,0.6), transparent 55%),
-    linear-gradient(#0b0706, #050404);
-  z-index: -2;
-}
+        /* Vintage vignette overlay */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
+            pointer-events: none;
+            border-radius: 6px;
+        }
 
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: url("https://grainy-gradients.vercel.app/noise.svg");
-  opacity: 0.08;
-  z-index: -1;
-}
+        /* ── Content ── */
+        .page {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            animation: fadeIn 0.5s ease;
+        }
 
-/* =======================
-   LAYOUT
-======================= */
-.container {
-  max-width: 650px;
-  margin: auto;
-  padding: 70px 20px;
-  text-align: center;
-}
+        .page.active {
+            display: flex;
+        }
 
-.page {
-  display: none;
-}
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-.page.active {
-  display: block;
-}
+        /* ── Typography ── */
+        h1,
+        h2,
+        h3 {
+            color: #e8d5b0;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
 
-h1 {
-  font-family: 'Cinzel', serif;
-  letter-spacing: 2px;
-}
+        h1 {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+            font-family: 'Times New Roman', serif;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #f0dfc0;
+        }
 
-button {
-  background: #c7a46a;
-  border: none;
-  padding: 12px 14px;
-  margin: 8px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 700;
-}
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+            color: #dcc9a6;
+        }
 
-button:hover {
-  transform: scale(1.05);
-}
+        h3 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #cbb48b;
+        }
 
-/* runaway no */
-#noBtn {
-  position: relative;
-}
+        p,
+        .subtext {
+            color: #d4c4a8;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+            margin-bottom: 20px;
+        }
 
-/* footprints */
-.foot {
-  position: fixed;
-  font-size: 18px;
-  animation: fade 1.5s forwards;
-}
+        .subtext {
+            font-style: italic;
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
 
-@keyframes fade {
-  0% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-40px); }
-}
+        /* ── Buttons & Options ── */
+        .option-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+            margin: 16px 0 10px;
+            width: 100%;
+        }
 
-/* page 6 fade */
-.fadeout {
-  animation: dissolve 1s forwards;
-}
+        .option-btn {
+            background: #3d2e22;
+            border: 2px solid #8a7a5a;
+            color: #e8dcc8;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-family: 'Georgia', serif;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+            letter-spacing: 0.5px;
+            flex: 0 1 auto;
+            min-width: 80px;
+        }
 
-@keyframes dissolve {
-  to { opacity: 0; transform: scale(1.05); }
-}
+        .option-btn:hover:not(:disabled) {
+            background: #5a4232;
+            border-color: #b8944c;
+            transform: scale(1.03);
+            box-shadow: 0 0 20px rgba(184, 148, 76, 0.3);
+        }
 
-</style>
+        .option-btn:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+
+        .option-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(0.3);
+        }
+
+        .option-btn .icon {
+            display: block;
+            font-size: 2.2rem;
+            margin-bottom: 4px;
+        }
+
+        .option-btn .label {
+            display: block;
+            font-size: 0.85rem;
+            line-height: 1.3;
+        }
+
+        /* Special: runaway buttons */
+        .runaway {
+            position: relative;
+            transition: all 0.15s ease;
+        }
+
+        /* ── Feedback / Reply ── */
+        .reply {
+            margin-top: 16px;
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 4px solid #b8944c;
+            color: #f0e2c8;
+            font-style: italic;
+            font-size: 1.05rem;
+            min-height: 50px;
+            border-radius: 4px;
+            width: 100%;
+            transition: all 0.3s;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .reply.hidden {
+            opacity: 0;
+            min-height: 20px;
+            padding: 4px 20px;
+        }
+
+        /* ── Big CTA ── */
+        .big-cta {
+            background: #4a3525;
+            border: 3px solid #b8944c;
+            color: #f0dfc0;
+            padding: 18px 40px;
+            font-size: 1.4rem;
+            font-family: 'Times New Roman', serif;
+            letter-spacing: 2px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(184, 148, 76, 0.2);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+            margin: 10px 0;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .big-cta:hover {
+            background: #5d4230;
+            border-color: #d4a84a;
+            transform: scale(1.02);
+            box-shadow: 0 0 50px rgba(184, 148, 76, 0.4);
+        }
+
+        .big-cta:active {
+            transform: scale(0.98);
+        }
+
+        /* ── Address reveal ── */
+        .address-box {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px dashed #b8944c;
+            padding: 24px 30px;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-size: 1.6rem;
+            color: #f0dfc0;
+            font-family: 'Times New Roman', serif;
+            letter-spacing: 2px;
+            width: 100%;
+            transition: all 0.8s ease;
+            opacity: 0;
+            transform: scale(0.95);
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 30px;
+        }
+
+        .address-box.revealed {
+            opacity: 1;
+            transform: scale(1);
+            max-height: 200px;
+            padding: 24px 30px;
+        }
+
+        /* ── Page 8 summary ── */
+        .summary-item {
+            color: #d4c4a8;
+            font-size: 1.1rem;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(184, 148, 76, 0.2);
+            width: 100%;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .summary-item strong {
+            color: #f0dfc0;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        /* ── Footprints animation ── */
+        .footprints {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            background: transparent;
+            animation: footprintWalk 2.5s ease forwards;
+        }
+
+        @keyframes footprintWalk {
+            0% {
+                background-image: none;
+            }
+            10% {
+                background-image: radial-gradient(circle at 10% 90%, rgba(184, 148, 76, 0.5) 4px, transparent 4px);
+            }
+            30% {
+                background-image: radial-gradient(circle at 25% 75%, rgba(184, 148, 76, 0.5) 4px, transparent 4px),
+                    radial-gradient(circle at 30% 80%, rgba(184, 148, 76, 0.5) 4px, transparent 4px);
+            }
+            50% {
+                background-image: radial-gradient(circle at 50% 60%, rgba(184, 148, 76, 0.5) 4px, transparent 4px),
+                    radial-gradient(circle at 55% 65%, rgba(184, 148, 76, 0.5) 4px, transparent 4px);
+            }
+            70% {
+                background-image: radial-gradient(circle at 70% 35%, rgba(184, 148, 76, 0.5) 4px, transparent 4px),
+                    radial-gradient(circle at 75% 40%, rgba(184, 148, 76, 0.5) 4px, transparent 4px);
+            }
+            90% {
+                background-image: radial-gradient(circle at 85% 15%, rgba(184, 148, 76, 0.5) 4px, transparent 4px),
+                    radial-gradient(circle at 90% 20%, rgba(184, 148, 76, 0.5) 4px, transparent 4px);
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            .container {
+                padding: 24px 16px;
+                border-width: 4px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            h2 {
+                font-size: 1.4rem;
+            }
+            .option-btn {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+                min-width: 60px;
+            }
+            .option-btn .icon {
+                font-size: 1.8rem;
+            }
+            .big-cta {
+                font-size: 1.1rem;
+                padding: 14px 24px;
+            }
+            .address-box {
+                font-size: 1.2rem;
+                padding: 16px 18px;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="bg"></div>
-<div class="overlay"></div>
+    <div class="container" id="app">
 
-<div class="container">
+        <!-- ═══ PAGE 1 — Invite ═══ -->
+        <div class="page active" id="page1">
+            <h1>🤫 SHHH</h1>
+            <p style="font-size:1.4rem; color:#e8d5b0;">
+                You've been invited.<br />
+                The gang is going underground.
+            </p>
+            <p style="font-size:1.2rem; color:#d4c4a8; margin-top:-6px;">
+                Will you meet us there?
+            </p>
+            <div class="option-grid">
+                <button class="option-btn" data-page="2" data-no="true">Yes</button>
+                <button class="option-btn" data-page="1" data-no="true">No</button>
+            </div>
+            <div id="reply1" class="reply hidden"></div>
+        </div>
 
-<!-- PAGE 1 -->
-<div id="p1" class="page active">
-  <h1>SHHH</h1>
-  <p>You've been invited. The gang is going underground. Will you meet us there?</p>
+        <!-- ═══ PAGE 2 — Time ═══ -->
+        <div class="page" id="page2">
+            <h2>🕰️ What time should we expect you?</h2>
+            <div class="option-grid">
+                <button class="option-btn" data-page="3" data-time="6:30pm">6:30pm</button>
+                <button class="option-btn" data-page="3" data-time="7:00pm">7:00pm</button>
+                <button class="option-btn runaway" data-page="2" data-time="8:00pm">8:00pm</button>
+                <button class="option-btn runaway" data-page="2" data-time="9:00pm">9:00pm</button>
+                <button class="option-btn runaway" data-page="2" data-time="10:00pm">10:00pm</button>
+            </div>
+            <div id="reply2" class="reply hidden"></div>
+        </div>
 
-  <button onclick="go(2)">Yes</button>
-  <button id="noBtn" onmouseover="runAway()">No</button>
-  <p id="msg1"></p>
-</div>
+        <!-- ═══ PAGE 3 — Password Hint ═══ -->
+        <div class="page" id="page3">
+            <h2>🔑 To enter you must know the password!</h2>
+            <p style="font-size:1rem; color:#cbb48b;">
+                Here's your hint:
+            </p>
+            <p style="font-size:1.15rem; font-style:italic; color:#e8d5b0; max-width:90%;">
+                "Which blonde icon made singing 'Happy Birthday' sound less like a celebration and more like a federal crime?"
+            </p>
+            <div class="option-grid">
+                <button class="option-btn" data-page="4" data-correct="true">A) Marilyn Monroe</button>
+                <button class="option-btn" data-page="3" data-wrong="first">B) Madonna</button>
+                <button class="option-btn" data-page="3" data-wrong="notquite">C) Grace Kelly</button>
+                <button class="option-btn" data-page="3" data-wrong="baby">D) Britney Spears</button>
+            </div>
+            <div id="reply3" class="reply hidden"></div>
+        </div>
 
-<!-- PAGE 2 -->
-<div id="p2" class="page">
-  <h1>Password Time</h1>
-  <p>Which blonde icon made singing 'Happy Birthday' sound like a federal crime?</p>
+        <!-- ═══ PAGE 4 — Attire ═══ -->
+        <div class="page" id="page4">
+            <h2>👗 Looks like you'll make it in the door...</h2>
+            <p style="color:#d4c4a8;">But first — what are you wearing?</p>
+            <div class="option-grid" style="flex-direction:column; gap:10px; max-width:320px; margin:0 auto;">
+                <button class="option-btn" data-page="5" data-attire="Sweatsuit">
+                    <span class="icon">🧘</span>
+                    <span class="label">Lazy attire only</span>
+                </button>
+                <button class="option-btn" data-page="5" data-attire="Jeans & Tee">
+                    <span class="icon">👖</span>
+                    <span class="label">As I am, heifer!</span>
+                </button>
+                <button class="option-btn" data-page="5" data-attire="Little Black Dress">
+                    <span class="icon">👗</span>
+                    <span class="label">Date night attire</span>
+                </button>
+                <button class="option-btn" data-page="5" data-attire="Tux / Ball Gown">
+                    <span class="icon">🎩</span>
+                    <span class="label">All in formal</span>
+                </button>
+                <button class="option-btn" data-page="5" data-attire="Nothing?">
+                    <span class="icon">❓</span>
+                    <span class="label">Clothes are required?</span>
+                </button>
+            </div>
+            <div id="reply4" class="reply hidden"></div>
+        </div>
 
-  <button onclick="q2('A')">Marilyn Monroe</button>
-  <button onclick="q2('B')">Madonna</button>
-  <button onclick="q2('C')">Grace Kelly</button>
-  <button onclick="q2('D')">Britney Spears</button>
+        <!-- ═══ PAGE 5 — Drinks ═══ -->
+        <div class="page" id="page5">
+            <h2>🥃 Now that we're all dressed — hopefully...</h2>
+            <p style="color:#d4c4a8;">Drinks are first! What's the vibe?</p>
+            <div class="option-grid" style="flex-direction:column; gap:8px; max-width:360px; margin:0 auto;">
+                <button class="option-btn" data-page="6" data-drink="Old Fashioned">
+                    A) Classic Old Fashioned — basic but in a vintage way
+                </button>
+                <button class="option-btn" data-page="6" data-drink="Bee's Knees">
+                    B) Bee's Knees — gin, lemon, honey; 1920s in a glass
+                </button>
+                <button class="option-btn" data-page="6" data-drink="Sidecar">
+                    C) Sidecar — fancy, French, pretending you're not here for cheap gin
+                </button>
+                <button class="option-btn" data-page="6" data-drink="French 75">
+                    D) French 75 — champagne & gin, bougie during a ban
+                </button>
+                <button class="option-btn" data-page="6" data-drink="Dark 'n' Stormy">
+                    E) Dark 'n' Stormy — rum & ginger beer, for when you want to seem edgy
+                </button>
+                <button class="option-btn" data-page="6" data-drink="Beer in a Teacup">
+                    F) Just a beer in a teacup — we all know that one guy
+                </button>
+            </div>
+            <div id="reply5" class="reply hidden"></div>
+        </div>
 
-  <p id="msg2"></p>
-</div>
+        <!-- ═══ PAGE 6 — Real Reason ═══ -->
+        <div class="page" id="page6">
+            <h2>🧐 What's the real reason you're coming?</h2>
+            <div class="option-grid" style="flex-direction:column; gap:8px; max-width:360px; margin:0 auto;">
+                <button class="option-btn" data-page="7" data-reason="For the drinks">
+                    A) For the drinks, obviously
+                </button>
+                <button class="option-btn" data-page="7" data-reason="To see and be seen">
+                    B) To see and be seen
+                </button>
+                <button class="option-btn" data-page="7" data-reason="Absinthe">
+                    C) Because Mary said you'd have absinthe
+                </button>
+                <button class="option-btn" data-page="7" data-reason="Forgot but dressed">
+                    D) I honestly forgot, but I'm already dressed up
+                </button>
+            </div>
+            <div id="reply6" class="reply hidden"></div>
+        </div>
 
-<!-- PAGE 3 -->
-<div id="p3" class="page">
-  <h1>What are you wearing?</h1>
+        <!-- ═══ PAGE 7 — Address Reveal ═══ -->
+        <div class="page" id="page7">
+            <h2>📍 Almost there...</h2>
+            <button class="big-cta" id="revealAddressBtn">
+                🕵️ I SWEAR I'M NOT A RAT — SHOW ME THE ADDRESS!
+            </button>
+            <div id="addressBox" class="address-box">
+                233 Broad St<br />Rome, GA 30161
+            </div>
+            <button class="big-cta" id="footprintBtn" style="display:none; margin-top:12px; font-size:1.1rem;">
+                🐾 I solemnly swear I am up to no good.
+            </button>
+            <div id="reply7" class="reply hidden"></div>
+        </div>
 
-  <button onclick="q3('A')">Lazy attire only</button>
-  <button onclick="q3('B')">As I am, heifer!</button>
-  <button onclick="q3('C')">Date night attire</button>
-  <button onclick="q3('D')">All in formal</button>
-  <button onclick="q3('E')">Clothes are required?</button>
+        <!-- ═══ PAGE 8 — Confirmation ═══ -->
+        <div class="page" id="page8" style="justify-content:center; min-height:400px;">
+            <h2 style="font-size:2rem;">🎉 Wonderful.</h2>
+            <p style="font-size:1.2rem; color:#e8d5b0;">See you there.</p>
+            <div style="width:100%; max-width:400px; margin-top:20px; text-align:left;">
+                <div class="summary-item"><strong>🕰️ Arrival:</strong> <span id="summaryTime">—</span></div>
+                <div class="summary-item"><strong>👗 Attire:</strong> <span id="summaryAttire">—</span></div>
+                <div class="summary-item"><strong>🥃 Drink:</strong> <span id="summaryDrink">—</span></div>
+                <div class="summary-item"><strong>🤫 Reason:</strong> <span id="summaryReason">—</span></div>
+            </div>
+            <p style="margin-top:30px; font-size:0.9rem; opacity:0.6; color:#a89478;">
+                🥂 The password was "Marilyn" all along.
+            </p>
+        </div>
 
-  <p id="msg3"></p>
-</div>
+    </div>
 
-<!-- PAGE 4 -->
-<div id="p4" class="page">
-  <h1>Drink Vibe</h1>
+    <script>
+        (function() {
+            'use strict';
 
-  <button onclick="q4()">Old Fashioned</button>
-  <button onclick="q4()">Bee's Knees</button>
-  <button onclick="q4()">Sidecar</button>
-  <button onclick="q4()">French 75</button>
-  <button onclick="q4()">Dark 'n' Stormy</button>
-  <button onclick="q4()">Beer in a teacup</button>
+            // ── State ──
+            const state = {
+                time: '—',
+                attire: '—',
+                drink: '—',
+                reason: '—',
+                currentPage: 1,
+            };
 
-  <p id="msg4"></p>
-</div>
+            // ── DOM refs ──
+            const pages = {
+                1: document.getElementById('page1'),
+                2: document.getElementById('page2'),
+                3: document.getElementById('page3'),
+                4: document.getElementById('page4'),
+                5: document.getElementById('page5'),
+                6: document.getElementById('page6'),
+                7: document.getElementById('page7'),
+                8: document.getElementById('page8'),
+            };
 
-<!-- PAGE 5 -->
-<div id="p5" class="page">
-  <h1>What's the real reason?</h1>
+            const replies = {
+                1: document.getElementById('reply1'),
+                2: document.getElementById('reply2'),
+                3: document.getElementById('reply3'),
+                4: document.getElementById('reply4'),
+                5: document.getElementById('reply5'),
+                6: document.getElementById('reply6'),
+                7: document.getElementById('reply7'),
+            };
 
-  <button onclick="go(6)">For drinks</button>
-  <button onclick="go(6)">See and be seen</button>
-  <button onclick="go(6)">Absinthe rumor</button>
-  <button onclick="go(6)">Forgot but dressed</button>
+            const addressBox = document.getElementById('addressBox');
+            const revealBtn = document.getElementById('revealAddressBtn');
+            const footprintBtn = document.getElementById('footprintBtn');
 
-  <p id="msg5"></p>
-</div>
+            // ── Helper: show page ──
+            function showPage(num) {
+                Object.keys(pages).forEach((key) => {
+                    pages[key].classList.toggle('active', parseInt(key) === num);
+                });
+                state.currentPage = num;
+                // Hide all replies when switching
+                Object.keys(replies).forEach((key) => {
+                    replies[key].classList.add('hidden');
+                    replies[key].textContent = '';
+                });
+                // Special: if page 7, ensure address hidden initially
+                if (num === 7) {
+                    addressBox.classList.remove('revealed');
+                    footprintBtn.style.display = 'none';
+                }
+                // Scroll to top of container
+                document.querySelector('.container').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
 
-<!-- PAGE 6 -->
-<div id="p6" class="page">
-  <h1 id="secretBtn" onclick="revealAddress()">I SWEAR IM NOT A RAT, SHOW ME THE ADDRESS!</h1>
+            // ── Set reply ──
+            function setReply(pageNum, text) {
+                const el = replies[pageNum];
+                if (!el) return;
+                el.textContent = text;
+                el.classList.remove('hidden');
+            }
 
-  <p id="address"></p>
+            // ── Move to next page with optional reply ──
+            function goToPage(pageNum, replyText) {
+                if (replyText) {
+                    const current = state.currentPage;
+                    if (replies[current]) {
+                        setReply(current, replyText);
+                    }
+                    // Small delay then move
+                    setTimeout(() => {
+                        showPage(pageNum);
+                    }, 400);
+                } else {
+                    showPage(pageNum);
+                }
+            }
 
-  <button id="finalBtn" style="display:none" onclick="footsteps()">
-    I solemnly swear I am up to no good.
-  </button>
-</div>
+            // ── Runaway logic ──
+            function setupRunaway() {
+                const runaways = document.querySelectorAll('.runaway');
+                runaways.forEach((btn) => {
+                    btn.addEventListener('mouseenter', function(e) {
+                        const container = this.closest('.container');
+                        if (!container) return;
+                        const rect = container.getBoundingClientRect();
+                        const btnRect = this.getBoundingClientRect();
 
-<!-- PAGE 7 -->
-<div id="p7" class="page">
-  <h1>Wonderful.</h1>
-  <p>See you there. All confirmation details are added.</p>
-</div>
+                        // Calculate random position within container
+                        const maxX = rect.width - btnRect.width - 10;
+                        const maxY = rect.height - btnRect.height - 10;
+                        const x = Math.random() * maxX;
+                        const y = Math.random() * maxY;
 
-</div>
+                        this.style.position = 'relative';
+                        this.style.left = x + 'px';
+                        this.style.top = y + 'px';
+                        this.style.transition = 'all 0.2s ease';
+                    });
 
-<script>
+                    btn.addEventListener('click', function(e) {
+                        setReply(2, '⏰ Too late — pick an earlier hour!');
+                        // Reset position
+                        this.style.left = '0px';
+                        this.style.top = '0px';
+                    });
+                });
+            }
 
-function go(n){
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('p'+n).classList.add('active');
-}
+            // ── Event delegation for all buttons ──
+            document.querySelector('.container').addEventListener('click', function(e) {
+                const btn = e.target.closest('.option-btn, .big-cta');
+                if (!btn) return;
 
-/* PAGE 1 NO BUTTON */
-function runAway(){
-  const btn = document.getElementById("noBtn");
-  btn.style.position = "absolute";
-  btn.style.top = Math.random()*window.innerHeight+"px";
-  btn.style.left = Math.random()*window.innerWidth+"px";
-  document.getElementById("msg1").innerText = ["try again","nope","haha no","we don't accept that"][Math.floor(Math.random()*4)];
-}
+                // ── PAGE 1: Yes / No ──
+                if (btn.closest('#page1')) {
+                    e.preventDefault();
+                    const isNo = btn.dataset.no === 'true' && btn.textContent.trim() === 'No';
+                    if (isNo) {
+                        const messages = [
+                            '🙅 Try again.',
+                            '❌ Wrong.',
+                            '😂 Haha — we don\'t accept that.',
+                            '😏 Nice try.',
+                            '🚫 Denied.',
+                            '🤭 You\'re funny. Now say Yes.'
+                        ];
+                        const msg = messages[Math.floor(Math.random() * messages.length)];
+                        setReply(1, msg);
+                        // Shake the button?
+                        btn.style.animation = 'shake 0.3s ease';
+                        setTimeout(() => { btn.style.animation = ''; }, 300);
+                    } else if (btn.textContent.trim() === 'Yes') {
+                        setReply(1, '✅ That\'s what we like to hear.');
+                        setTimeout(() => { showPage(2); }, 500);
+                    }
+                    return;
+                }
 
-/* PAGE 2 */
-function q2(ans){
-  if(ans==="A"){
-    document.getElementById("msg2").innerText="Champagne accepted 🍾";
-    setTimeout(()=>go(3),800);
-  } else {
-    let msg = {
-      B:"Well, you got the 1st letter",
-      C:"haha, not quite",
-      D:"hit me baby one more time"
-    };
-    document.getElementById("msg2").innerText = msg[ans];
-  }
-}
+                // ── PAGE 2: Time ──
+                if (btn.closest('#page2')) {
+                    e.preventDefault();
+                    const time = btn.dataset.time;
+                    if (!time) return;
 
-/* PAGE 3 */
-function q3(a){
-  let msg = {
-    A:"if you must...",
-    B:"respect",
-    C:"We do love a fancy night out",
-    D:"We love it. Only sequins will do and they're expected",
-    E:"oh, wow... I'll get the bail money ready"
-  };
-  document.getElementById("msg3").innerText = msg[a];
-  setTimeout(()=>go(4),800);
-}
+                    // Check if it's a runaway (8,9,10pm)
+                    if (btn.classList.contains('runaway')) {
+                        setReply(2, '⏰ Too late — pick an earlier hour!');
+                        return;
+                    }
 
-/* PAGE 4 */
-function q4(){
-  document.getElementById("msg4").innerText="Good choice.";
-  setTimeout(()=>go(5),800);
-}
+                    // Valid: 6:30 or 7:00
+                    state.time = time;
+                    setReply(2, `🕰️ ${time} it is! See you then.`);
+                    setTimeout(() => { showPage(3); }, 500);
+                    return;
+                }
 
-/* PAGE 6 */
-function revealAddress(){
-  document.getElementById("secretBtn").classList.add("fadeout");
-  setTimeout(()=>{
-    document.getElementById("address").innerText="233 Broad St Rome GA 30161";
-    document.getElementById("finalBtn").style.display="inline-block";
-  },900);
-}
+                // ── PAGE 3: Password ──
+                if (btn.closest('#page3')) {
+                    e.preventDefault();
+                    if (btn.dataset.correct === 'true') {
+                        setReply(3, '🍾 Correct! A champagne bottle appears — you\'re in!');
+                        setTimeout(() => { showPage(4); }, 600);
+                        return;
+                    }
+                    if (btn.dataset.wrong === 'first') {
+                        setReply(3, '🤔 Well, you got the 1st letter... try again.');
+                        return;
+                    }
+                    if (btn.dataset.wrong === 'notquite') {
+                        setReply(3, '😏 Haha, not quite. Try again.');
+                        return;
+                    }
+                    if (btn.dataset.wrong === 'baby') {
+                        setReply(3, '🎤 "Hit me baby one more time!" — but no. Try again.');
+                        return;
+                    }
+                    return;
+                }
 
-/* footprints */
-function footsteps(){
-  for(let i=0;i<12;i++){
-    setTimeout(()=>{
-      const f = document.createElement("div");
-      f.className="foot";
-      f.innerText="👣";
-      f.style.left = Math.random()*window.innerWidth+"px";
-      f.style.top = Math.random()*window.innerHeight+"px";
-      document.body.appendChild(f);
-      setTimeout(()=>f.remove(),1500);
-    }, i*120);
-  }
+                // ── PAGE 4: Attire ──
+                if (btn.closest('#page4')) {
+                    e.preventDefault();
+                    const attire = btn.dataset.attire;
+                    if (!attire) return;
 
-  setTimeout(()=>go(7),1500);
-}
+                    state.attire = attire;
 
-</script>
+                    const repliesMap = {
+                        'Sweatsuit': '😅 If you must...',
+                        'Jeans & Tee': '🤝 Respect.',
+                        'Little Black Dress': '✨ We do love a fancy night out.',
+                        'Tux / Ball Gown': '🎩 We love it. Only sequins will do and they\'re expected.',
+                        'Nothing?': '🫣 Oh, wow... I\'ll get the bail money ready.',
+                    };
+
+                    setReply(4, repliesMap[attire] || '👌 Perfect.');
+                    setTimeout(() => { showPage(5); }, 600);
+                    return;
+                }
+
+                // ── PAGE 5: Drinks ──
+                if (btn.closest('#page5')) {
+                    e.preventDefault();
+                    const drink = btn.dataset.drink;
+                    if (!drink) return;
+
+                    state.drink = drink;
+
+                    const repliesMap = {
+                        'Old Fashioned': '🥃 Classic choice. You\'re basic but we love it.',
+                        'Bee\'s Knees': '🐝 The cat\'s meow! Cheers to the 20s.',
+                        'Sidecar': '🍸 Fancy pants. Don\'t spill on the velvet.',
+                        'French 75': '🥂 Bougie and bubbly — we approve.',
+                        'Dark \'n\' Stormy': '⛈️ Edgy. We\'ll keep an eye on you.',
+                        'Beer in a Teacup': '🍺 We knew it. You\'re that guy. Respect.',
+                    };
+
+                    setReply(5, repliesMap[drink] || '🍹 Great choice.');
+                    setTimeout(() => { showPage(6); }, 600);
+                    return;
+                }
+
+                // ── PAGE 6: Reason ──
+                if (btn.closest('#page6')) {
+                    e.preventDefault();
+                    const reason = btn.dataset.reason;
+                    if (!reason) return;
+
+                    state.reason = reason;
+
+                    const repliesMap = {
+                        'For the drinks': '🥃 Me too. Me too...',
+                        'To see and be seen': '👀 As you should.',
+                        'Absinthe': '🍸 I don\'t, but the bar does. Hope you\'re buying the next round!',
+                        'Forgot but dressed': '🎭 Let\'s get to the shenanigans!',
+                    };
+
+                    setReply(6, repliesMap[reason] || '🤷 Fair enough.');
+                    setTimeout(() => { showPage(7); }, 600);
+                    return;
+                }
+
+                // ── PAGE 7: Reveal Address ──
+                if (btn.id === 'revealAddressBtn') {
+                    e.preventDefault();
+                    addressBox.classList.add('revealed');
+                    footprintBtn.style.display = 'inline-block';
+                    setReply(7, '📍 Address revealed! Scroll down...');
+                    btn.style.display = 'none';
+                    return;
+                }
+
+                if (btn.id === 'footprintBtn') {
+                    e.preventDefault();
+                    // Trigger footprint animation
+                    const fp = document.createElement('div');
+                    fp.className = 'footprints';
+                    document.body.appendChild(fp);
+                    setTimeout(() => { fp.remove(); }, 3000);
+
+                    setReply(7, '🐾 Footprints tracked. You\'re committed now.');
+                    setTimeout(() => {
+                        // Update summary
+                        document.getElementById('summaryTime').textContent = state.time;
+                        document.getElementById('summaryAttire').textContent = state.attire;
+                        document.getElementById('summaryDrink').textContent = state.drink;
+                        document.getElementById('summaryReason').textContent = state.reason;
+                        showPage(8);
+                    }, 800);
+                    return;
+                }
+            });
+
+            // ── Init ──
+            setupRunaway();
+
+            // Add shake keyframe dynamically
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    25% { transform: translateX(-8px); }
+                    75% { transform: translateX(8px); }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Start on page 1
+            showPage(1);
+
+        })();
+    </script>
+
+</body>
+</html>
