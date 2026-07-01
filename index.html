@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>You're Invited</title>
+<title>Beneath Broad</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 
@@ -11,52 +11,57 @@
 body {
   margin: 0;
   font-family: 'Playfair Display', serif;
-  background: radial-gradient(circle at top, #1b1a18, #0a0a0a);
-  color: #f4f1ea;
+  background: radial-gradient(circle at top, #1f1a16, #0b0a09);
+  color: #f5f1e8;
   overflow: hidden;
 }
 
-/* ambient warm haze */
+/* soft amber haze */
 body::before {
   content: "";
   position: fixed;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(255,200,120,0.06), transparent 60%);
-  animation: drift 14s infinite linear;
+  background: radial-gradient(circle, rgba(255,180,90,0.06), transparent 60%);
+  animation: drift 16s linear infinite;
   pointer-events: none;
 }
 
 @keyframes drift {
-  0% { transform: translate(-10%, -10%); }
-  50% { transform: translate(-5%, -15%); }
-  100% { transform: translate(-10%, -10%); }
+  0% { transform: translate(-8%, -8%); }
+  50% { transform: translate(-12%, -15%); }
+  100% { transform: translate(-8%, -8%); }
 }
 
 .container {
-  max-width: 520px;
+  max-width: 540px;
   margin: auto;
-  padding: 50px 20px;
+  padding: 60px 20px;
   text-align: center;
 }
 
 h1 {
   font-family: 'Cinzel', serif;
   letter-spacing: 2px;
+  font-weight: 600;
 }
 
 .glow {
-  text-shadow: 0 0 18px rgba(255, 215, 130, 0.25);
+  text-shadow: 0 0 18px rgba(255, 200, 120, 0.2);
+}
+
+p {
+  opacity: 0.85;
 }
 
 button {
-  background: #c2a46a;
+  background: #c7a46a;
   border: none;
   padding: 12px 16px;
   margin: 8px;
   font-weight: bold;
-  cursor: pointer;
   border-radius: 6px;
+  cursor: pointer;
   transition: 0.2s;
 }
 
@@ -68,20 +73,33 @@ button:hover {
 .section.active { display: block; animation: fade 0.5s ease; }
 
 @keyframes fade {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* runaway chaos buttons */
+/* runaway button */
 .chaos {
   position: absolute;
 }
 
-/* sparkle effect */
+/* subtle shake feedback */
+.shake {
+  animation: shake 0.25s;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-3px); }
+  100% { transform: translateX(0); }
+}
+
+/* sparkle micro feedback */
 .spark {
   position: fixed;
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   background: gold;
   border-radius: 50%;
   pointer-events: none;
@@ -89,8 +107,15 @@ button:hover {
 }
 
 @keyframes pop {
-  from { transform: scale(1); opacity: 1; }
-  to { transform: scale(3); opacity: 0; }
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(3); }
+}
+
+/* bartender text */
+#voice {
+  margin-top: 10px;
+  font-style: italic;
+  opacity: 0.7;
 }
 </style>
 </head>
@@ -99,51 +124,54 @@ button:hover {
 
 <div class="container">
 
-  <!-- PAGE 1 -->
+  <!-- INTRO -->
   <div id="p1" class="section active">
-    <h1 class="glow">You’ve Been Summoned</h1>
-    <p>JH Beneath Broad. Dinner. Drinks. A slightly illegal amount of fun.</p>
+    <h1 class="glow">You’ve Been Noticed</h1>
+    <p>JH Beneath Broad has a reservation under your existence.</p>
 
-    <button onclick="go('p2')">Yes, I'm in 🍸</button>
-    <button id="noBtn" onmouseover="runAway(this)">No 😌</button>
+    <button onclick="go('p2')">Accept</button>
+    <button id="noBtn" onmouseover="runAway(this)">No</button>
+
+    <div id="voice"></div>
   </div>
 
-  <!-- PAGE 2 -->
+  <!-- TIME -->
   <div id="p2" class="section">
-    <h1>What time?</h1>
+    <h1>When are you arriving?</h1>
 
-    <button onclick="pickTime('6:30 PM')">6:30 PM</button>
-    <button onclick="pickTime('7:00 PM')">7:00 PM</button>
+    <button onclick="chooseTime('6:30 PM')">6:30 PM</button>
+    <button onclick="chooseTime('7:00 PM')">7:00 PM</button>
 
-    <p id="timeNote"></p>
+    <p id="voice2"></p>
   </div>
 
-  <!-- PAGE 3 -->
+  <!-- OUTFIT -->
   <div id="p3" class="section">
-    <h1>Dress code</h1>
+    <h1>Dress code assessment</h1>
 
-    <button onclick="pickOutfit('Lounge & Lazy')">🛋 Lounge & Lazy</button>
-    <button onclick="pickOutfit('Jeans Bro')">👖 Jeans Bro</button>
-    <button onclick="pickOutfit('Date Night')">🖤 Date Night</button>
-    <button onclick="pickOutfit('All Out!')">✨ All Out!</button>
+    <button onclick="chooseOutfit('Lounge & Lazy')">Lounge & Lazy</button>
+    <button onclick="chooseOutfit('Jeans Bro')">Jeans Bro</button>
+    <button onclick="chooseOutfit('Date Night')">Date Night</button>
+    <button onclick="chooseOutfit('All Out')">All Out</button>
   </div>
 
-  <!-- PAGE 4 -->
+  <!-- DRINK -->
   <div id="p4" class="section">
-    <h1>What are we drinking?</h1>
+    <h1>First drink decision</h1>
 
-    <button onclick="pickDrink('Bougie Bubbles')">🥂 Bougie Bubbles</button>
-    <button onclick="pickDrink('Fruity Something')">🍍 Fruity Something</button>
-    <button onclick="pickDrink('Old Fashioned')">🥃 Old Fashioned</button>
-    <button onclick="pickDrink('Mixologist Surprise')">🧪 Mixologist Surprise</button>
+    <button onclick="chooseDrink('Bubbles')">Bougie Bubbles</button>
+    <button onclick="chooseDrink('Fruity')">Something Fruity</button>
+    <button onclick="chooseDrink('Old Fashioned')">Old Fashioned</button>
+    <button onclick="chooseDrink('Mixologist')">Talk to the bartender</button>
 
-    <button id="boringBtn" onmouseover="runAway(this)">🚫 Nothing, I’m boring</button>
+    <button id="boringBtn" onmouseover="runAway(this)">Nothing. I'm boring.</button>
   </div>
 
   <!-- FINAL -->
   <div id="p5" class="section">
-    <h1 class="glow">It’s Official.</h1>
-    <p>You’re on the list. Don’t be late.</p>
+    <h1 class="glow">You're in.</h1>
+    <p>Try not to ruin the vibe.</p>
+
     <p id="summary"></p>
   </div>
 
@@ -155,42 +183,61 @@ let data = {};
 function go(id){
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  voice(randomVoice());
 }
 
+function voice(text){
+  let v = document.getElementById("voice");
+  if(v) v.innerText = text;
+}
+
+function randomVoice(){
+  const lines = [
+    "Noted.",
+    "Bold choice.",
+    "We’ve seen worse.",
+    "Interesting…",
+    "Try not to overthink it.",
+    "Accepted. Barely."
+  ];
+  return lines[Math.floor(Math.random()*lines.length)];
+}
+
+/* runaway button logic */
 function runAway(btn){
-  btn.classList.add('chaos');
+  btn.classList.add("chaos");
   btn.style.top = Math.random() * window.innerHeight + "px";
   btn.style.left = Math.random() * window.innerWidth + "px";
   sparkle();
 }
 
-function pickTime(t){
-  data.time = t;
-  document.getElementById("timeNote").innerText = "Perfect. That one feels right.";
-  setTimeout(()=>go('p3'), 700);
-}
-
-function pickOutfit(o){
-  data.outfit = o;
-  sparkle();
-  go('p4');
-}
-
-function pickDrink(d){
-  data.drink = d;
-  sparkle();
-  finish();
-}
-
 function sparkle(){
-  for(let i=0;i<6;i++){
+  for(let i=0;i<5;i++){
     let s = document.createElement("div");
     s.className = "spark";
     s.style.left = Math.random()*window.innerWidth + "px";
     s.style.top = Math.random()*window.innerHeight + "px";
     document.body.appendChild(s);
-    setTimeout(()=>s.remove(), 600);
+    setTimeout(()=>s.remove(),600);
   }
+}
+
+/* choices */
+function chooseTime(t){
+  data.time = t;
+  document.getElementById("voice2").innerText = "Seat reserved. Don’t be late.";
+  setTimeout(()=>go('p3'), 700);
+}
+
+function chooseOutfit(o){
+  data.outfit = o;
+  sparkle();
+  go('p4');
+}
+
+function chooseDrink(d){
+  data.drink = d;
+  finish();
 }
 
 function finish(){
