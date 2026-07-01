@@ -3,85 +3,94 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Beneath Broad Invite</title>
+<title>Beneath Broad</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
 /* =========================
-   ATMOSPHERE (REAL FIX)
+   ATMOSPHERE (ROOM FIRST)
 ========================= */
 
 body {
   margin: 0;
   font-family: 'Playfair Display', serif;
-  color: #f4efe6;
+  color: #f5f1e8;
   overflow: hidden;
-  background: #0b0908;
+  background: #070505;
 }
 
-/* warm moving light source */
+/* living light */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(circle at 30% 20%, rgba(255,180,90,0.20), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(120,80,40,0.15), transparent 60%),
-    radial-gradient(circle at 50% 50%, rgba(0,0,0,0.9), #000);
-  animation: breathe 12s ease-in-out infinite;
+    radial-gradient(circle at 30% 30%, rgba(255,170,90,0.18), transparent 55%),
+    radial-gradient(circle at 70% 60%, rgba(120,80,40,0.12), transparent 60%),
+    radial-gradient(circle at center, rgba(0,0,0,0.9), #000);
+  animation: breathe 14s ease-in-out infinite;
   pointer-events: none;
 }
 
-/* grain overlay */
+@keyframes breathe {
+  0% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.03); filter: brightness(1.08); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+/* grain */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
-  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-  opacity: 0.08;
+  background: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.07;
   pointer-events: none;
 }
 
-/* slow ambient motion */
-@keyframes breathe {
-  0% { transform: scale(1); filter: brightness(1); }
-  50% { transform: scale(1.04); filter: brightness(1.1); }
-  100% { transform: scale(1); filter: brightness(1); }
-}
-
 /* =========================
-   LAYOUT
+   STRUCTURE
 ========================= */
 
 .container {
-  max-width: 540px;
+  max-width: 600px;
   margin: auto;
-  padding: 70px 20px;
+  padding: 90px 20px;
   text-align: center;
-  position: relative;
 }
 
-/* scenes */
-.section {
+/* EVERYTHING is staged */
+.scene {
   opacity: 0;
-  transform: translateY(14px);
-  transition: all 0.7s ease;
+  transform: translateY(18px);
+  transition: all 0.9s ease;
   position: absolute;
   width: 100%;
 }
 
-.section.active {
+.scene.active {
   opacity: 1;
   transform: translateY(0);
   position: relative;
+}
+
+/* reveal animation for options */
+.hidden {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: 0.6s ease;
+}
+
+.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* typography */
 h1 {
   font-family: 'Cinzel', serif;
   letter-spacing: 2px;
-  margin-bottom: 10px;
 }
 
 .glow {
@@ -94,19 +103,19 @@ p {
 
 /* buttons */
 button {
-  background: rgba(199,164,106,0.9);
+  background: rgba(199,164,106,0.85);
   border: none;
   padding: 12px 16px;
   margin: 8px;
-  border-radius: 6px;
-  font-weight: bold;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.25s;
 }
 
 button:hover {
-  transform: scale(1.04);
-  filter: brightness(1.1);
+  transform: scale(1.03);
+  filter: brightness(1.15);
 }
 
 /* runaway */
@@ -114,11 +123,12 @@ button:hover {
   position: absolute;
 }
 
-/* voice */
-#voice {
-  margin-top: 14px;
+/* reaction */
+#reaction {
+  margin-top: 18px;
   font-style: italic;
   opacity: 0.65;
+  min-height: 20px;
 }
 </style>
 </head>
@@ -127,51 +137,59 @@ button:hover {
 
 <div class="container">
 
-  <!-- PAGE 1 -->
-  <div id="p1" class="section active">
+  <!-- INTRO -->
+  <div id="intro" class="scene active">
     <h1 class="glow">You’ve Been Noticed</h1>
-    <p>JH Beneath Broad acknowledges your presence.</p>
+    <p>The room registers your arrival.</p>
 
-    <button onclick="go('p2')">Accept</button>
-    <button id="noBtn" onmouseover="runAway(this)">No</button>
+    <div id="introButtons" class="hidden">
+      <button onclick="enter()">Enter</button>
+      <button id="noBtn" onmouseover="runAway(this)">No</button>
+    </div>
 
-    <p id="voice"></p>
+    <p id="reaction"></p>
   </div>
 
-  <!-- PAGE 2 -->
-  <div id="p2" class="section">
-    <h1>Arrival</h1>
+  <!-- TIME -->
+  <div id="time" class="scene">
+    <h1>When are you arriving?</h1>
 
-    <button onclick="time('6:30 PM')">6:30 PM</button>
-    <button onclick="time('7:00 PM')">7:00 PM</button>
+    <div id="timeOptions" class="hidden">
+      <button onclick="pickTime('6:30 PM')">6:30 PM</button>
+      <button onclick="pickTime('7:00 PM')">7:00 PM</button>
+    </div>
   </div>
 
-  <!-- PAGE 3 -->
-  <div id="p3" class="section">
-    <h1>Attire</h1>
+  <!-- OUTFIT -->
+  <div id="outfit" class="scene">
+    <h1>What are you wearing?</h1>
 
-    <button onclick="outfit('Lounge')">Lounge & Lazy</button>
-    <button onclick="outfit('Jeans')">Jeans Bro</button>
-    <button onclick="outfit('Date')">Date Night</button>
-    <button onclick="outfit('AllOut')">All Out</button>
+    <div id="outfitOptions" class="hidden">
+      <button onclick="pickOutfit('Lounge')">Lounge & Lazy</button>
+      <button onclick="pickOutfit('Jeans')">Jeans Bro</button>
+      <button onclick="pickOutfit('Date')">Date Night</button>
+      <button onclick="pickOutfit('All')">All Out</button>
+    </div>
   </div>
 
-  <!-- PAGE 4 -->
-  <div id="p4" class="section">
-    <h1>Drink</h1>
+  <!-- DRINK -->
+  <div id="drink" class="scene">
+    <h1>What are you drinking?</h1>
 
-    <button onclick="drink('Bubbles')">Bougie Bubbles</button>
-    <button onclick="drink('Fruity')">Something Fruity</button>
-    <button onclick="drink('Old')">Old Fashioned</button>
-    <button onclick="drink('Mix')">Ask the Bartender</button>
+    <div id="drinkOptions" class="hidden">
+      <button onclick="pickDrink('Bubbles')">Bougie Bubbles</button>
+      <button onclick="pickDrink('Fruity')">Something Fruity</button>
+      <button onclick="pickDrink('Old')">Old Fashioned</button>
+      <button onclick="pickDrink('Mix')">Ask the Bartender</button>
 
-    <button id="boringBtn" onmouseover="runAway(this)">Nothing. I'm boring.</button>
+      <button id="boringBtn" onmouseover="runAway(this)">Nothing, I'm boring</button>
+    </div>
   </div>
 
   <!-- FINAL -->
-  <div id="p5" class="section">
+  <div id="final" class="scene">
     <h1 class="glow">You’re In.</h1>
-    <p>Saturday night. Don’t be late. They notice everything here.</p>
+    <p>They were expecting you.</p>
     <p id="summary"></p>
   </div>
 
@@ -180,63 +198,75 @@ button:hover {
 <script>
 let data = {};
 
-const voiceLines = [
-  "Noted.",
-  "Mm.",
-  "We’ll allow it.",
-  "Interesting.",
-  "Expected.",
-  "You’ll do."
-];
-
-function voice(){
-  document.getElementById("voice").innerText =
-    voiceLines[Math.floor(Math.random()*voiceLines.length)];
+/* room reaction */
+function react(msg){
+  document.getElementById("reaction").innerText = msg || "";
 }
 
+/* staged reveal helper */
+function reveal(id){
+  setTimeout(() => {
+    document.getElementById(id).classList.add("show");
+  }, 900);
+}
+
+/* scene swap with delay */
 function go(id){
   setTimeout(() => {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    voice();
-  }, 450);
+  }, 600);
 }
 
-/* runaway */
+/* ENTRY */
+function enter(){
+  react("The room acknowledges you.");
+  setTimeout(()=>go('time'), 900);
+  setTimeout(()=>reveal('timeOptions'), 1500);
+}
+
+/* RUNAWAY */
 function runAway(btn){
   btn.style.position = "absolute";
   btn.style.top = Math.random() * window.innerHeight + "px";
   btn.style.left = Math.random() * window.innerWidth + "px";
-  voice();
+  react("That answer is not accepted here.");
 }
 
-/* choices */
-function time(t){
+/* TIME */
+function pickTime(t){
   data.time = t;
-  voice();
-  setTimeout(()=>go('p3'), 500);
+  react("Noted.");
+  go('outfit');
+  reveal('outfitOptions');
 }
 
-function outfit(o){
+/* OUTFIT */
+function pickOutfit(o){
   data.outfit = o;
-  voice();
-  setTimeout(()=>go('p4'), 500);
+  react("Observed.");
+  go('drink');
+  reveal('drinkOptions');
 }
 
-function drink(d){
+/* DRINK */
+function pickDrink(d){
   data.drink = d;
-  voice();
-  setTimeout(()=>finish(), 500);
+  react("Good.");
+  setTimeout(()=>finish(), 800);
 }
 
+/* FINAL */
 function finish(){
-  go('p5');
+  go('final');
   setTimeout(() => {
     document.getElementById("summary").innerText =
       `Time: ${data.time}
 Outfit: ${data.outfit}
-Drink: ${data.drink}`;
-  }, 600);
+Drink: ${data.drink}
+
+Status: Expected.`;
+  }, 900);
 }
 </script>
 
