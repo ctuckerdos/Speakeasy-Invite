@@ -1,113 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Beneath Broad Invite</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
+/* =========================
+   ATMOSPHERE (REAL FIX)
+========================= */
+
 body {
   margin: 0;
   font-family: 'Playfair Display', serif;
-  background: radial-gradient(circle at top, #1a1411, #070606);
-  color: #f5f1e8;
+  color: #f4efe6;
   overflow: hidden;
+  background: #0b0908;
 }
 
-/* subtle moving atmosphere */
+/* warm moving light source */
 body::before {
   content: "";
   position: fixed;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255,185,120,0.05), transparent 60%);
-  animation: drift 18s ease-in-out infinite;
+  inset: 0;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,180,90,0.20), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(120,80,40,0.15), transparent 60%),
+    radial-gradient(circle at 50% 50%, rgba(0,0,0,0.9), #000);
+  animation: breathe 12s ease-in-out infinite;
   pointer-events: none;
 }
 
-@keyframes drift {
-  0% { transform: translate(-8%, -8%); }
-  50% { transform: translate(-12%, -14%); }
-  100% { transform: translate(-8%, -8%); }
+/* grain overlay */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.08;
+  pointer-events: none;
 }
+
+/* slow ambient motion */
+@keyframes breathe {
+  0% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.04); filter: brightness(1.1); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+/* =========================
+   LAYOUT
+========================= */
 
 .container {
   max-width: 540px;
   margin: auto;
-  padding: 65px 20px;
+  padding: 70px 20px;
   text-align: center;
+  position: relative;
 }
 
-/* smooth scene transitions */
+/* scenes */
 .section {
   opacity: 0;
-  transform: translateY(10px) scale(0.98);
-  transition: all 0.55s ease;
+  transform: translateY(14px);
+  transition: all 0.7s ease;
   position: absolute;
   width: 100%;
-  left: 0;
 }
 
 .section.active {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: translateY(0);
   position: relative;
 }
 
+/* typography */
 h1 {
   font-family: 'Cinzel', serif;
   letter-spacing: 2px;
+  margin-bottom: 10px;
 }
 
 .glow {
-  text-shadow: 0 0 18px rgba(255, 200, 120, 0.15);
+  text-shadow: 0 0 30px rgba(255,190,120,0.12);
 }
 
 p {
-  opacity: 0.8;
-  transition: 0.3s;
+  opacity: 0.75;
 }
 
+/* buttons */
 button {
-  background: #c7a46a;
+  background: rgba(199,164,106,0.9);
   border: none;
   padding: 12px 16px;
   margin: 8px;
-  font-weight: bold;
   border-radius: 6px;
+  font-weight: bold;
   cursor: pointer;
   transition: 0.2s;
 }
 
 button:hover {
   transform: scale(1.04);
+  filter: brightness(1.1);
 }
 
-/* runaway button */
+/* runaway */
 .chaos {
   position: absolute;
 }
 
-/* subtle spark */
-.spark {
-  position: fixed;
-  width: 4px;
-  height: 4px;
-  background: gold;
-  border-radius: 50%;
-  pointer-events: none;
-  animation: fade 0.6s ease-out forwards;
-}
-
-@keyframes fade {
-  from { opacity: 1; transform: scale(1); }
-  to { opacity: 0; transform: scale(3); }
-}
-
+/* voice */
 #voice {
-  margin-top: 12px;
+  margin-top: 14px;
   font-style: italic;
   opacity: 0.65;
 }
@@ -121,12 +130,10 @@ button:hover {
   <!-- PAGE 1 -->
   <div id="p1" class="section active">
     <h1 class="glow">You’ve Been Noticed</h1>
-    <p>JH Beneath Broad has acknowledged your reservation.</p>
+    <p>JH Beneath Broad acknowledges your presence.</p>
 
     <button onclick="go('p2')">Accept</button>
     <button id="noBtn" onmouseover="runAway(this)">No</button>
-
-    <button onclick="toggleSound()" id="soundBtn">Turn on Jazz (optional)</button>
 
     <p id="voice"></p>
   </div>
@@ -135,28 +142,28 @@ button:hover {
   <div id="p2" class="section">
     <h1>Arrival</h1>
 
-    <button onclick="pickTime('6:30 PM')">6:30 PM</button>
-    <button onclick="pickTime('7:00 PM')">7:00 PM</button>
+    <button onclick="time('6:30 PM')">6:30 PM</button>
+    <button onclick="time('7:00 PM')">7:00 PM</button>
   </div>
 
   <!-- PAGE 3 -->
   <div id="p3" class="section">
-    <h1>Dress Code</h1>
+    <h1>Attire</h1>
 
-    <button onclick="pickOutfit('Lounge & Lazy')">Lounge & Lazy</button>
-    <button onclick="pickOutfit('Jeans Bro')">Jeans Bro</button>
-    <button onclick="pickOutfit('Date Night')">Date Night</button>
-    <button onclick="pickOutfit('All Out')">All Out</button>
+    <button onclick="outfit('Lounge')">Lounge & Lazy</button>
+    <button onclick="outfit('Jeans')">Jeans Bro</button>
+    <button onclick="outfit('Date')">Date Night</button>
+    <button onclick="outfit('AllOut')">All Out</button>
   </div>
 
   <!-- PAGE 4 -->
   <div id="p4" class="section">
     <h1>Drink</h1>
 
-    <button onclick="pickDrink('Bubbles')">Bougie Bubbles</button>
-    <button onclick="pickDrink('Fruity')">Something Fruity</button>
-    <button onclick="pickDrink('Old Fashioned')">Old Fashioned</button>
-    <button onclick="pickDrink('Mixologist')">Ask the Bartender</button>
+    <button onclick="drink('Bubbles')">Bougie Bubbles</button>
+    <button onclick="drink('Fruity')">Something Fruity</button>
+    <button onclick="drink('Old')">Old Fashioned</button>
+    <button onclick="drink('Mix')">Ask the Bartender</button>
 
     <button id="boringBtn" onmouseover="runAway(this)">Nothing. I'm boring.</button>
   </div>
@@ -165,20 +172,13 @@ button:hover {
   <div id="p5" class="section">
     <h1 class="glow">You’re In.</h1>
     <p>Saturday night. Don’t be late. They notice everything here.</p>
-
     <p id="summary"></p>
   </div>
 
 </div>
 
-<!-- SOUND -->
-<audio id="jazz" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8b3b3c5a2.mp3?filename=slow-jazz-ambient-11059.mp3">
-</audio>
-
 <script>
 let data = {};
-let soundOn = false;
 
 const voiceLines = [
   "Noted.",
@@ -189,73 +189,44 @@ const voiceLines = [
   "You’ll do."
 ];
 
-function voice(text){
-  document.getElementById("voice").innerText = text;
+function voice(){
+  document.getElementById("voice").innerText =
+    voiceLines[Math.floor(Math.random()*voiceLines.length)];
 }
 
 function go(id){
   setTimeout(() => {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    voice(voiceLines[Math.floor(Math.random()*voiceLines.length)]);
-  }, 400);
+    voice();
+  }, 450);
 }
 
-/* SOUND */
-function toggleSound(){
-  const audio = document.getElementById("jazz");
-
-  if(!soundOn){
-    audio.volume = 0.25;
-    audio.play();
-    soundOn = true;
-    document.getElementById("soundBtn").innerText = "Jazz is on";
-  }
-}
-
-/* RUNAWAY BUTTON */
+/* runaway */
 function runAway(btn){
   btn.style.position = "absolute";
-
-  setTimeout(() => {
-    btn.style.top = Math.random() * (window.innerHeight - 100) + "px";
-    btn.style.left = Math.random() * (window.innerWidth - 100) + "px";
-  }, 120);
-
-  voice("That’s not how this works.");
+  btn.style.top = Math.random() * window.innerHeight + "px";
+  btn.style.left = Math.random() * window.innerWidth + "px";
+  voice();
 }
 
-/* SPARK */
-function spark(){
-  for(let i=0;i<4;i++){
-    let s = document.createElement("div");
-    s.className = "spark";
-    s.style.left = Math.random()*window.innerWidth + "px";
-    s.style.top = Math.random()*window.innerHeight + "px";
-    document.body.appendChild(s);
-    setTimeout(()=>s.remove(),600);
-  }
-}
-
-/* CHOICES */
-function pickTime(t){
+/* choices */
+function time(t){
   data.time = t;
-  voice(t === "6:30 PM" ? "Early. Respectable." : "Late. Confident.");
-  setTimeout(()=>go('p3'), 600);
+  voice();
+  setTimeout(()=>go('p3'), 500);
 }
 
-function pickOutfit(o){
+function outfit(o){
   data.outfit = o;
-  voice("Observed.");
-  spark();
-  setTimeout(()=>go('p4'), 650);
+  voice();
+  setTimeout(()=>go('p4'), 500);
 }
 
-function pickDrink(d){
+function drink(d){
   data.drink = d;
-  voice("Good.");
-  spark();
-  setTimeout(()=>finish(), 650);
+  voice();
+  setTimeout(()=>finish(), 500);
 }
 
 function finish(){
@@ -264,9 +235,7 @@ function finish(){
     document.getElementById("summary").innerText =
       `Time: ${data.time}
 Outfit: ${data.outfit}
-Drink: ${data.drink}
-
-Status: Approved.`;
+Drink: ${data.drink}`;
   }, 600);
 }
 </script>
