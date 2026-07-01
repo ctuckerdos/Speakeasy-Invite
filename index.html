@@ -23,19 +23,30 @@
             padding: 20px;
         }
 
-        /* ── Prohibition-style background ── */
+        /* ── Prohibition-style background with bar/booth texture ── */
         .container {
             max-width: 720px;
             width: 100%;
             background: #2a1f18;
+            /* Bar/booth texture — wood grain + velvet + moody lighting */
             background-image:
-                radial-gradient(ellipse at 20% 50%, rgba(60, 40, 28, 0.6) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 50%, rgba(60, 40, 28, 0.6) 0%, transparent 60%),
+                /* Wood grain lines */
+                repeating-linear-gradient(90deg,
+                    rgba(60, 40, 28, 0.3) 0px,
+                    rgba(60, 40, 28, 0.3) 1px,
+                    transparent 1px,
+                    transparent 4px),
+                /* Velvet booth texture */
                 repeating-linear-gradient(45deg,
-                    rgba(40, 28, 20, 0.3) 0px,
-                    rgba(40, 28, 20, 0.3) 2px,
+                    rgba(80, 50, 35, 0.15) 0px,
+                    rgba(80, 50, 35, 0.15) 2px,
                     transparent 2px,
-                    transparent 8px);
+                    transparent 8px),
+                /* Dark corners (vignette) */
+                radial-gradient(ellipse at 30% 40%, rgba(60, 40, 30, 0.4) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 60%, rgba(60, 40, 30, 0.4) 0%, transparent 60%),
+                /* Base color */
+                linear-gradient(180deg, #2a1f18 0%, #1e1612 100%);
             border: 6px solid #b8944c;
             border-image: linear-gradient(180deg, #d4a84a, #8a6a2f) 1;
             padding: 40px 30px;
@@ -43,13 +54,14 @@
             box-shadow:
                 0 0 40px rgba(0, 0, 0, 0.9),
                 inset 0 0 60px rgba(0, 0, 0, 0.7),
-                0 0 120px rgba(184, 148, 76, 0.15);
+                0 0 120px rgba(184, 148, 76, 0.15),
+                inset 0 0 100px rgba(0, 0, 0, 0.5);
             position: relative;
             min-height: 600px;
             transition: min-height 0.3s;
         }
 
-        /* Vintage vignette overlay */
+        /* Vintage spotlight overlay */
         .container::before {
             content: '';
             position: absolute;
@@ -58,7 +70,8 @@
             right: 0;
             bottom: 0;
             background:
-                radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
+                radial-gradient(ellipse at 50% 40%, rgba(200, 170, 120, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.5) 100%);
             pointer-events: none;
             border-radius: 6px;
         }
@@ -160,6 +173,7 @@
             letter-spacing: 0.5px;
             flex: 0 1 auto;
             min-width: 80px;
+            user-select: none;
         }
 
         .option-btn:hover:not(:disabled) {
@@ -201,7 +215,7 @@
         .reply {
             margin-top: 16px;
             padding: 12px 20px;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             border-left: 4px solid #b8944c;
             color: #f0e2c8;
             font-style: italic;
@@ -236,6 +250,7 @@
             margin: 10px 0;
             width: 100%;
             max-width: 400px;
+            user-select: none;
         }
 
         .big-cta:hover {
@@ -293,7 +308,7 @@
         }
 
         /* ── Footprints animation ── */
-        .footprints {
+        .footprint-container {
             position: fixed;
             top: 0;
             left: 0;
@@ -301,36 +316,98 @@
             height: 100%;
             pointer-events: none;
             z-index: 999;
-            background: transparent;
-            animation: footprintWalk 2.5s ease forwards;
+            overflow: hidden;
+        }
+
+        .footprint {
+            position: absolute;
+            font-size: 2.5rem;
+            opacity: 0;
+            animation: footprintWalk 2.8s ease forwards;
         }
 
         @keyframes footprintWalk {
             0% {
-                background-image: none;
+                opacity: 0;
+                transform: translate(0, 0) scale(0.8) rotate(-10deg);
             }
-            10% {
-                background-image: radial-gradient(circle at 10% 90%, rgba(184, 148, 76, 0.5) 4px, transparent 4px);
+            15% {
+                opacity: 1;
+                transform: translate(10vw, 8vh) scale(1) rotate(-5deg);
             }
-            30% {
-                background-image: radial-gradient(circle at 25% 75%, rgba(184, 148, 76, 0.5) 4px, transparent 4px),
-                    radial-gradient(circle at 30% 80%, rgba(184, 148, 76, 0.5) 4px, transparent 4px);
+            40% {
+                opacity: 1;
+                transform: translate(30vw, 25vh) scale(1.1) rotate(3deg);
             }
-            50% {
-                background-image: radial-gradient(circle at 50% 60%, rgba(184, 148, 76, 0.5) 4px, transparent 4px),
-                    radial-gradient(circle at 55% 65%, rgba(184, 148, 76, 0.5) 4px, transparent 4px);
+            65% {
+                opacity: 1;
+                transform: translate(55vw, 45vh) scale(0.9) rotate(-8deg);
             }
-            70% {
-                background-image: radial-gradient(circle at 70% 35%, rgba(184, 148, 76, 0.5) 4px, transparent 4px),
-                    radial-gradient(circle at 75% 40%, rgba(184, 148, 76, 0.5) 4px, transparent 4px);
-            }
-            90% {
-                background-image: radial-gradient(circle at 85% 15%, rgba(184, 148, 76, 0.5) 4px, transparent 4px),
-                    radial-gradient(circle at 90% 20%, rgba(184, 148, 76, 0.5) 4px, transparent 4px);
+            85% {
+                opacity: 1;
+                transform: translate(75vw, 65vh) scale(1.05) rotate(5deg);
             }
             100% {
                 opacity: 0;
+                transform: translate(90vw, 85vh) scale(0.7) rotate(0deg);
             }
+        }
+
+        /* Different paths for each footprint */
+        .footprint:nth-child(1) {
+            animation-duration: 3.2s;
+            animation-delay: 0s;
+            left: -5%;
+            top: -5%;
+        }
+        .footprint:nth-child(2) {
+            animation-duration: 2.8s;
+            animation-delay: 0.2s;
+            left: 5%;
+            top: 2%;
+            font-size: 2.2rem;
+        }
+        .footprint:nth-child(3) {
+            animation-duration: 3.5s;
+            animation-delay: 0.5s;
+            left: -2%;
+            top: 10%;
+            font-size: 2.8rem;
+        }
+        .footprint:nth-child(4) {
+            animation-duration: 3.0s;
+            animation-delay: 0.8s;
+            left: 8%;
+            top: -3%;
+            font-size: 2rem;
+        }
+        .footprint:nth-child(5) {
+            animation-duration: 3.8s;
+            animation-delay: 1.0s;
+            left: 0%;
+            top: 5%;
+            font-size: 2.6rem;
+        }
+        .footprint:nth-child(6) {
+            animation-duration: 2.6s;
+            animation-delay: 1.3s;
+            left: -8%;
+            top: 0%;
+            font-size: 2.3rem;
+        }
+        .footprint:nth-child(7) {
+            animation-duration: 3.3s;
+            animation-delay: 1.6s;
+            left: 3%;
+            top: -2%;
+            font-size: 2.7rem;
+        }
+        .footprint:nth-child(8) {
+            animation-duration: 2.9s;
+            animation-delay: 1.9s;
+            left: -3%;
+            top: 8%;
+            font-size: 2.1rem;
         }
 
         /* ── Responsive ── */
@@ -361,6 +438,15 @@
                 font-size: 1.2rem;
                 padding: 16px 18px;
             }
+            .footprint {
+                font-size: 1.8rem !important;
+            }
+        }
+
+        /* ── Disable clicks during transition ── */
+        .transitioning {
+            pointer-events: none !important;
+            opacity: 0.7;
         }
     </style>
 </head>
@@ -379,7 +465,7 @@
                 Will you meet us there?
             </p>
             <div class="option-grid">
-                <button class="option-btn" data-page="2" data-no="true">Yes</button>
+                <button class="option-btn" data-page="2" data-no="false">Yes</button>
                 <button class="option-btn" data-page="1" data-no="true">No</button>
             </div>
             <div id="reply1" class="reply hidden"></div>
@@ -535,6 +621,7 @@
                 drink: '—',
                 reason: '—',
                 currentPage: 1,
+                isTransitioning: false,
             };
 
             // ── DOM refs ──
@@ -562,6 +649,7 @@
             const addressBox = document.getElementById('addressBox');
             const revealBtn = document.getElementById('revealAddressBtn');
             const footprintBtn = document.getElementById('footprintBtn');
+            const container = document.querySelector('.container');
 
             // ── Helper: show page ──
             function showPage(num) {
@@ -578,9 +666,11 @@
                 if (num === 7) {
                     addressBox.classList.remove('revealed');
                     footprintBtn.style.display = 'none';
+                    revealBtn.style.display = 'inline-block';
                 }
-                // Scroll to top of container
-                document.querySelector('.container').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                state.isTransitioning = false;
+                container.classList.remove('transitioning');
             }
 
             // ── Set reply ──
@@ -591,20 +681,21 @@
                 el.classList.remove('hidden');
             }
 
-            // ── Move to next page with optional reply ──
-            function goToPage(pageNum, replyText) {
+            // ── Move to next page with delay ──
+            function goToPage(pageNum, replyText, delay) {
+                if (state.isTransitioning) return;
+                state.isTransitioning = true;
+                container.classList.add('transitioning');
+
+                const current = state.currentPage;
                 if (replyText) {
-                    const current = state.currentPage;
-                    if (replies[current]) {
-                        setReply(current, replyText);
-                    }
-                    // Small delay then move
-                    setTimeout(() => {
-                        showPage(pageNum);
-                    }, 400);
-                } else {
-                    showPage(pageNum);
+                    setReply(current, replyText);
                 }
+
+                // Wait for user to read the reply
+                setTimeout(() => {
+                    showPage(pageNum);
+                }, delay || 1200);
             }
 
             // ── Runaway logic ──
@@ -612,24 +703,22 @@
                 const runaways = document.querySelectorAll('.runaway');
                 runaways.forEach((btn) => {
                     btn.addEventListener('mouseenter', function(e) {
-                        const container = this.closest('.container');
-                        if (!container) return;
-                        const rect = container.getBoundingClientRect();
+                        const containerRect = container.getBoundingClientRect();
                         const btnRect = this.getBoundingClientRect();
 
-                        // Calculate random position within container
-                        const maxX = rect.width - btnRect.width - 10;
-                        const maxY = rect.height - btnRect.height - 10;
-                        const x = Math.random() * maxX;
-                        const y = Math.random() * maxY;
+                        const maxX = containerRect.width - btnRect.width - 10;
+                        const maxY = containerRect.height - btnRect.height - 10;
+                        const x = Math.max(0, Math.random() * maxX);
+                        const y = Math.max(0, Math.random() * maxY);
 
                         this.style.position = 'relative';
                         this.style.left = x + 'px';
                         this.style.top = y + 'px';
-                        this.style.transition = 'all 0.2s ease';
+                        this.style.transition = 'all 0.15s ease';
                     });
 
                     btn.addEventListener('click', function(e) {
+                        if (state.isTransitioning) return;
                         setReply(2, '⏰ Too late — pick an earlier hour!');
                         // Reset position
                         this.style.left = '0px';
@@ -638,15 +727,37 @@
                 });
             }
 
+            // ── Footprint scatter ──
+            function triggerFootprints() {
+                const container = document.createElement('div');
+                container.className = 'footprint-container';
+
+                const emojis = ['🐾', '🐾', '🐾', '🐾', '🐾', '🐾', '🐾', '🐾'];
+                emojis.forEach((emoji) => {
+                    const span = document.createElement('span');
+                    span.className = 'footprint';
+                    span.textContent = emoji;
+                    container.appendChild(span);
+                });
+
+                document.body.appendChild(container);
+
+                // Remove after animation completes
+                setTimeout(() => {
+                    container.remove();
+                }, 4000);
+            }
+
             // ── Event delegation for all buttons ──
-            document.querySelector('.container').addEventListener('click', function(e) {
+            container.addEventListener('click', function(e) {
                 const btn = e.target.closest('.option-btn, .big-cta');
                 if (!btn) return;
+                if (state.isTransitioning) return;
 
                 // ── PAGE 1: Yes / No ──
                 if (btn.closest('#page1')) {
                     e.preventDefault();
-                    const isNo = btn.dataset.no === 'true' && btn.textContent.trim() === 'No';
+                    const isNo = btn.dataset.no === 'true';
                     if (isNo) {
                         const messages = [
                             '🙅 Try again.',
@@ -658,14 +769,14 @@
                         ];
                         const msg = messages[Math.floor(Math.random() * messages.length)];
                         setReply(1, msg);
-                        // Shake the button?
                         btn.style.animation = 'shake 0.3s ease';
                         setTimeout(() => { btn.style.animation = ''; }, 300);
-                    } else if (btn.textContent.trim() === 'Yes') {
+                        return;
+                    } else {
                         setReply(1, '✅ That\'s what we like to hear.');
-                        setTimeout(() => { showPage(2); }, 500);
+                        setTimeout(() => { goToPage(2, null, 800); }, 300);
+                        return;
                     }
-                    return;
                 }
 
                 // ── PAGE 2: Time ──
@@ -674,16 +785,14 @@
                     const time = btn.dataset.time;
                     if (!time) return;
 
-                    // Check if it's a runaway (8,9,10pm)
                     if (btn.classList.contains('runaway')) {
                         setReply(2, '⏰ Too late — pick an earlier hour!');
                         return;
                     }
 
-                    // Valid: 6:30 or 7:00
                     state.time = time;
                     setReply(2, `🕰️ ${time} it is! See you then.`);
-                    setTimeout(() => { showPage(3); }, 500);
+                    setTimeout(() => { goToPage(3, null, 1000); }, 300);
                     return;
                 }
 
@@ -692,7 +801,7 @@
                     e.preventDefault();
                     if (btn.dataset.correct === 'true') {
                         setReply(3, '🍾 Correct! A champagne bottle appears — you\'re in!');
-                        setTimeout(() => { showPage(4); }, 600);
+                        setTimeout(() => { goToPage(4, null, 1200); }, 300);
                         return;
                     }
                     if (btn.dataset.wrong === 'first') {
@@ -727,7 +836,7 @@
                     };
 
                     setReply(4, repliesMap[attire] || '👌 Perfect.');
-                    setTimeout(() => { showPage(5); }, 600);
+                    setTimeout(() => { goToPage(5, null, 1200); }, 300);
                     return;
                 }
 
@@ -749,7 +858,7 @@
                     };
 
                     setReply(5, repliesMap[drink] || '🍹 Great choice.');
-                    setTimeout(() => { showPage(6); }, 600);
+                    setTimeout(() => { goToPage(6, null, 1200); }, 300);
                     return;
                 }
 
@@ -769,7 +878,7 @@
                     };
 
                     setReply(6, repliesMap[reason] || '🤷 Fair enough.');
-                    setTimeout(() => { showPage(7); }, 600);
+                    setTimeout(() => { goToPage(7, null, 1200); }, 300);
                     return;
                 }
 
@@ -778,28 +887,22 @@
                     e.preventDefault();
                     addressBox.classList.add('revealed');
                     footprintBtn.style.display = 'inline-block';
-                    setReply(7, '📍 Address revealed! Scroll down...');
+                    setReply(7, '📍 Address revealed! Now swear the oath...');
                     btn.style.display = 'none';
                     return;
                 }
 
                 if (btn.id === 'footprintBtn') {
                     e.preventDefault();
-                    // Trigger footprint animation
-                    const fp = document.createElement('div');
-                    fp.className = 'footprints';
-                    document.body.appendChild(fp);
-                    setTimeout(() => { fp.remove(); }, 3000);
-
-                    setReply(7, '🐾 Footprints tracked. You\'re committed now.');
+                    triggerFootprints();
+                    setReply(7, '🐾 Footprints scattered. You\'re committed now.');
                     setTimeout(() => {
-                        // Update summary
                         document.getElementById('summaryTime').textContent = state.time;
                         document.getElementById('summaryAttire').textContent = state.attire;
                         document.getElementById('summaryDrink').textContent = state.drink;
                         document.getElementById('summaryReason').textContent = state.reason;
-                        showPage(8);
-                    }, 800);
+                        goToPage(8, null, 1000);
+                    }, 500);
                     return;
                 }
             });
@@ -818,7 +921,6 @@
             `;
             document.head.appendChild(style);
 
-            // Start on page 1
             showPage(1);
 
         })();
